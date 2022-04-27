@@ -10,7 +10,19 @@
         "lint": "next lint",
         "export": "next export",
         "prettier": "prettier \"**/*.+(js|jsx|json|ts|tsx|yml|yaml|css|scss|md|mdx)\" --list-different",
-        "format": "yarn prettier --write"
+        "format": "yarn prettier --write",
+        "commit": "cz"
+    },
+    "lint-staged": {
+      "./src/**/*.{ts,js,jsx,tsx}": [
+        "yarn lint --fix",
+        "yarn format"
+      ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     },
     "dependencies": {
         "next": "12.1.5",
@@ -21,14 +33,12 @@
         "@types/node": "17.0.29",
         "@types/react": "18.0.8",
         "@types/react-dom": "18.0.0",
+        "cz-conventional-changelog": "3.3.0",
         "eslint": "8.14.0",
         "eslint-config-next": "12.1.5",
         "husky": "^7.0.4",
         "lint-staged": "^12.4.1",
         "prettier": "2.6.2",
         "typescript": "4.6.3"
-    },
-    "lint-staged": {
-        "**/*": "prettier --write --ignore-unknown"
     }
 }
