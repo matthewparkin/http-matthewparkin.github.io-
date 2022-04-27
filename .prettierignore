@@ -1,0 +1,12 @@
+charles/
+coverage/
+jenkins/
+node_modules/
+lib/
+.next/
+CHANGELOG.md
+currencyFormat.js
+lerna.json
+**/README.md
+apps/minigames/export
+.vscode/

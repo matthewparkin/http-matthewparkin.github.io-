@@ -1,40 +1,36 @@
 name: Deploy build
 
-on: 
-  push:
-    branches: 
-      - master
+on:
+    push:
+        branches:
+            - master
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x]
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-
-    steps:
-      - name: Get files
-        uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install packages
-        run: yarn --frozen-lockfile
-      - name: Build project
-        run: yarn build
-      - name: Export project
-        run: yarn export
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.3.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          branch: gh-pages
-          folder: out
-
-
-
+        steps:
+            - name: Get files
+              uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Install packages
+              run: yarn --frozen-lockfile
+            - name: Build project
+              run: yarn build
+            - name: Export project
+              run: yarn export
+            - name: Deploy
+              uses: JamesIves/github-pages-deploy-action@v4.3.0
+              with:
+                  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  branch: gh-pages
+                  folder: out
 # name: Build and Deploy
 # on:
 #   push:
