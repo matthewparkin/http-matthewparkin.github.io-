@@ -1,0 +1,67 @@
+name: Deploy build
+
+on: 
+  push:
+    branches: 
+      - master
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Get files
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install packages
+        run: yarn --frozen-lockfile
+      - name: Build project
+        run: yarn build
+      - name: Export project
+        run: yarn export
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          folder: out
+
+
+
+# name: Build and Deploy
+# on:
+#   push:
+#     branches:
+#       - master
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [14.x]
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2.3.1
+#         with:
+#           persist-credentials: false
+
+#       - name: Build
+#         run: |
+#           yarn
+#           yarn run build
+#           yarn run export
+
+#       - name: Deploy
+#         uses: JamesIves/github-pages-deploy-action@3.6.1
+#         with:
+#           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+#           BRANCH: gh-pages
+#           FOLDER: out
+#           CLEAN: true
