@@ -1,5 +1,7 @@
 {
     "extends": "next/core-web-vitals",
+    "parser": "@typescript-eslint/parser",
+    "plugins": [],
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"]

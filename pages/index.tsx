@@ -6,7 +6,6 @@ import GamePage from "./game";
 
 const Home: NextPage = () => {
   return (
-
     <React.Fragment>
       <div className={styles.container}>
         <Head>
@@ -26,13 +25,16 @@ const Home: NextPage = () => {
             I am a developer, learning fun things and experimenting with 3d games!!!
           </p>
 
+          <GamePage
+            assetBaseUrl={"/public/"}
+          />
 
-          <GamePage />
-          
           <div className={styles.grid}>
             <a href="" className={styles.card}>
               <h2>Games &rarr;</h2>
-              <p>I make web games using WebGL frameworks like PixiJS and Babylon JS.</p>
+              <p>
+                I make web games using WebGL frameworks like PixiJS and Babylon JS.
+              </p>
             </a>
 
             <a href="" className={styles.card}>
