@@ -1,6 +1,6 @@
 import * as React from "react";
 import Game from "./Game";
-import styles from "../styles/Game.module.css";
+import styles from "./index.module.css";
 
 export interface IProps {
     // assetBaseUrl - is a relative base url for where the assets are hosted eg."public/", might use this more as develop

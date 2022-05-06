@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import styles from "../styles/Home.module.css";
+import styles from "./index.module.css";
 import GamePage from "./GamePage";
 
 const Home: NextPage = () => {
