@@ -9,6 +9,7 @@ import {
     Vector3,
 } from "babylonjs";
 import Camera from "./components/Camera";
+import PlayerChar from "./components/PlayerChar";
 
 // Class for game logic
 export default class Game {
@@ -87,18 +88,21 @@ export default class Game {
         );
         // Move the sphere upward 1/2 its height
         sphere.position.y = 1;
+        sphere.position.x = 3;
 
         sphere.checkCollisions = true;
 
-        const boundingCube = MeshBuilder.CreateBox(
-            "boundingBox",
-            { size: 190, height: 10 },
-            this.scene
-        );
-        boundingCube.checkCollisions = true;
+        // const boundingCube = MeshBuilder.CreateBox(
+        //     "boundingBox",
+        //     { size: 190, height: 10 },
+        //     this.scene
+        // );
+        // boundingCube.checkCollisions = true;
 
         // Add camera to the scene
         new Camera(this.scene, canvas);
+
+        const playerChar = new PlayerChar(this.scene);
 
         // Registers a render loop to repeatedly render the scene
         this.engine.runRenderLoop(() => this.scene.render());

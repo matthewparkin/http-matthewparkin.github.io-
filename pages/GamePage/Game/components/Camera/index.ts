@@ -1,7 +1,6 @@
 import { FreeCamera, Scene, Vector3 } from "babylonjs";
 
 export default class Camera extends FreeCamera {
-    // cameraFocus: Vector3;
     constructor(scene: Scene, canvas: HTMLCanvasElement) {
         // Camera initial set
         super("Camera", new Vector3(2, 2, 8), scene);
@@ -17,7 +16,7 @@ export default class Camera extends FreeCamera {
 
         //Then apply collisions and gravity to the active camera
         this.checkCollisions = true;
-        this.applyGravity = true;
+        // this.applyGravity = true;
 
         //Set the ellipsoid around the camera (e.g. your player's size)
         this.ellipsoid = new Vector3(1, 1, 1);
