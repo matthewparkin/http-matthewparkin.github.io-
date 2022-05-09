@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import styles from "./index.module.css";
-import GamePage from "./GamePage";
+import GamePage from "../components/GamePage";
 
 const Home: NextPage = () => {
     return (

@@ -8,8 +8,8 @@ import {
     SceneLoader,
     Vector3,
 } from "babylonjs";
-import Camera from "./components/Camera";
-import PlayerChar from "./components/PlayerChar";
+import Camera from "./Camera";
+import PlayerChar from "./PlayerChar";
 
 // Class for game logic
 export default class Game {
