@@ -1,4 +1,5 @@
 import {
+    AssetsManager,
     Color3,
     Color4,
     Engine,
@@ -8,8 +9,13 @@ import {
     SceneLoader,
     Vector3,
 } from "babylonjs";
+import AssetTasksManager from "./AssetTasksManager";
+import king from "./king";
 import Camera from "./Camera";
 import PlayerChar from "./PlayerChar";
+// This loads the GLTF loader that is required to load the prize machine model
+import "babylonjs-loaders";
+import { Mesh } from "babylonjs/Meshes/mesh";
 
 // Class for game logic
 export default class Game {
@@ -17,6 +23,7 @@ export default class Game {
     private scene: Scene;
 
     private assetBaseUrl: string;
+    private assetTasks!: AssetTasksManager;
 
     constructor(canvas: HTMLCanvasElement, assetBaseUrl: string) {
         // Initialise the canvas and engine
@@ -35,7 +42,7 @@ export default class Game {
         this.assetBaseUrl = assetBaseUrl;
 
         // Removes default BabylonJS loading screen
-        SceneLoader.ShowLoadingScreen = false;
+        SceneLoader.ShowLoadingScreen = true;
 
         // Initialising the Scene
         this.scene = new Scene(this.engine);
@@ -80,6 +87,35 @@ export default class Game {
         // Default intensity is 1. Let's dim the light a small amount
         light.intensity = 0.7;
 
+        // Add camera to the scene
+        new Camera(this.scene, canvas);
+
+        this.loadAssets();
+
+        // Watcher for browser/canvas resize events
+        window.addEventListener("resize", () => this.engine.resize());
+    }
+
+    private loadAssets() {
+        // The asset manager loads all of the assets progressively.
+        const assetsManager = new AssetsManager(this.scene);
+        this.assetTasks = new AssetTasksManager(assetsManager, this.assetBaseUrl);
+
+        // We have our own loading screen so this is not needed - on by default
+        assetsManager.useDefaultLoadingScreen = false;
+        assetsManager.load();
+
+        assetsManager.onFinish = () => {
+            // Builds the machine body asset and changes materials, also adds glow layer to scene
+            const theKing = new king();
+            theKing.build(this.scene);
+
+            this.handleGameLoadComplete();
+        };
+    }
+
+    // Handles running the scene optimiser, registers running the render loop, and dispatches game complete action
+    private handleGameLoadComplete() {
         // Our built-in 'sphere' shape.
         const sphere = MeshBuilder.CreateSphere(
             "sphere",
@@ -92,24 +128,12 @@ export default class Game {
 
         sphere.checkCollisions = true;
 
-        // const boundingCube = MeshBuilder.CreateBox(
-        //     "boundingBox",
-        //     { size: 190, height: 10 },
-        //     this.scene
-        // );
-        // boundingCube.checkCollisions = true;
-
-        // Add camera to the scene
-        new Camera(this.scene, canvas);
-
         const playerChar = new PlayerChar(this.scene);
+        // playerChar.position.x =  new Vector3(0, 1, 0);
 
         // Registers a render loop to repeatedly render the scene
         this.engine.runRenderLoop(() => this.scene.render());
 
         this.scene.render();
-
-        // Watcher for browser/canvas resize events
-        window.addEventListener("resize", () => this.engine.resize());
     }
 }

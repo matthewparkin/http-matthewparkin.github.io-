@@ -2,9 +2,9 @@ import { Color3, KeyboardEventTypes, Matrix, Mesh, MeshBuilder, Scene, Vector3 }
 
 export default class PlayerChar {
     constructor(scene: Scene) {
-        const base = new Mesh("pivot");
+        const base = new Mesh("marbleChar");
         const bodyDiam = 2;
-        const body = MeshBuilder.CreateSphere("b", { diameter: bodyDiam });
+        const body = MeshBuilder.CreateSphere("marble", { diameter: bodyDiam });
 
         // body.checkCollisions = true;
         body.parent = base;
@@ -24,13 +24,13 @@ export default class PlayerChar {
         }
 
         const ellipse = [];
-        ellipse[0] = MeshBuilder.CreateLines("e", { points: points }, scene);
+        ellipse[0] = MeshBuilder.CreateLines("characterMoveBounds", { points: points }, scene);
         ellipse[0].color = Color3.Red();
         ellipse[0].parent = base;
         const steps = 12;
         const dTheta = (2 * Math.PI) / steps;
         for (let i = 1; i < steps; i++) {
-            ellipse[i] = ellipse[0].clone("el" + i);
+            ellipse[i] = ellipse[0].clone("characterMoveBounds" + i);
             ellipse[i].parent = base;
             ellipse[i].rotation.y = i * dTheta;
         }
@@ -41,10 +41,10 @@ export default class PlayerChar {
         let matrix = Matrix.Identity();
 
         //line to indicate direction
-        let line = MeshBuilder.CreateLines("f", {
+        let line = MeshBuilder.CreateLines("pointer", {
             points: [
-                base.position.add(new Vector3(0, 3, 0)),
-                base.position.add(new Vector3(0, 3, 0)).add(forward.scale(3)),
+                base.position.add(new Vector3(0, 1, 0)),
+                base.position.add(new Vector3(0, 1, 0)).add(forward.scale(3)),
             ],
             updatable: true,
         });
@@ -77,10 +77,10 @@ export default class PlayerChar {
                     }
                     break;
             }
-            line = MeshBuilder.CreateLines("f", {
+            line = MeshBuilder.CreateLines("pointer", {
                 points: [
-                    base.position.add(new Vector3(0, 3, 0)),
-                    base.position.add(new Vector3(0, 3, 0)).add(forward.scale(3)),
+                    base.position.add(new Vector3(0, 1, 0)),
+                    base.position.add(new Vector3(0, 1, 0)).add(forward.scale(3)),
                 ],
                 instance: line,
             });

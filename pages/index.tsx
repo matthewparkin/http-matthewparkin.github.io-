@@ -8,7 +8,7 @@ const Home: NextPage = () => {
     return (
         <React.Fragment>
             <div>
-                <GamePage assetBaseUrl={"/public/"} />
+                <GamePage assetBaseUrl={"/"} />
             </div>
             <div className={styles.container}>
                 <Head>
