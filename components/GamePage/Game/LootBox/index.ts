@@ -1,18 +1,7 @@
 // Constants
-import {
-    AbstractMesh,
-    Color3,
-    GlowLayer,
-    Material,
-    PBRMaterial,
-    Scene,
-    Texture,
-    Vector3,
-} from "babylonjs";
+import { AbstractMesh, Scene, TransformNode } from "babylonjs";
 
-import gsap, { Sine } from "gsap";
-
-export default class king {
+export default class LootBox {
     constructor() {}
     // builds a GTLF file which is compressed to Binary - https://www.khronos.org/gltf/
     // This link shows the model is then further compressed using the draco mesh compressor,
@@ -56,9 +45,12 @@ export default class king {
             }
         };
 
-        getMeshByName("__root__", (mesh) => {
-            mesh.position.x = -1.9;
+        getMeshByName("boxBottom", (mesh) => {
+            mesh.position.y = 2;
         });
+
+        // Added this util as if a mesh has multiple assigned materials gltf will unhelpfully
+        // export it out under multiple new primitived meshes
 
         //     if (!this.isMega) {
         //         getMeshByName("mega", (mesh) => {

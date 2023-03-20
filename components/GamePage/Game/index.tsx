@@ -13,9 +13,12 @@ import AssetTasksManager from "./AssetTasksManager";
 import king from "./king";
 import Camera from "./Camera";
 import PlayerChar from "./PlayerChar";
-// This loads the GLTF loader that is required to load the prize machine model
+// This loads the GLTF loader that is required to load glb assets
 import "babylonjs-loaders";
 import { Mesh } from "babylonjs/Meshes/mesh";
+import LootBox from "./LootBox";
+import { getMeshGroupByName } from "./utils/utils";
+import gsap from "gsap";
 
 // Class for game logic
 export default class Game {
@@ -106,9 +109,25 @@ export default class Game {
         assetsManager.load();
 
         assetsManager.onFinish = () => {
-            // Builds the machine body asset and changes materials, also adds glow layer to scene
             const theKing = new king();
             theKing.build(this.scene);
+
+            // const lootBox = new LootBox();
+            // lootBox.build(this.scene);
+
+            getMeshGroupByName("boxBottom", this.scene, (mesh) => {
+                mesh.position.y = 1;
+            });
+
+            getMeshGroupByName("boxTop", this.scene, (mesh) => {
+                mesh.position = new Vector3(0, 1, 0);
+                // gsap.to(mesh.position, 1, {
+                //     ease: Sine.easeOut,
+                //     x: 0.1,
+                //     y: 0,
+                //     b: 0,
+                // });
+            });
 
             this.handleGameLoadComplete();
         };
@@ -124,11 +143,11 @@ export default class Game {
         );
         // Move the sphere upward 1/2 its height
         sphere.position.y = 1;
-        sphere.position.x = 3;
+        sphere.position.x = 5;
 
         sphere.checkCollisions = true;
 
-        const playerChar = new PlayerChar(this.scene);
+        // const playerChar = new PlayerChar(this.scene);
         // playerChar.position.x =  new Vector3(0, 1, 0);
 
         // Registers a render loop to repeatedly render the scene

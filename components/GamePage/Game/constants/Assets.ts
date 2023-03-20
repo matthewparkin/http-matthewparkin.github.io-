@@ -1,6 +1,7 @@
 export enum Models {
     king = "kingy.glb",
-    marbleRun = "marbleRun.glb",
+    // marbleRun = "marbleRun.glb",
+    lootBox = "box.glb",
 }
 
 // // Textures used in models that require preloading

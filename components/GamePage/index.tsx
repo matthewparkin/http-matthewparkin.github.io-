@@ -38,7 +38,6 @@ class GamePage extends React.Component<IProps, IState> {
         }
     }
 
-    // createGame - Creates new PrizeMachine3DGame
     private createGame(canvasElement: HTMLCanvasElement) {
         this.game = new Game(canvasElement, this.props.assetBaseUrl);
 

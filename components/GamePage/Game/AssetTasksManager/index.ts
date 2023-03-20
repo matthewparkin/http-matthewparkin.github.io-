@@ -5,13 +5,9 @@ export default class AssetTasksManager {
     gameTileTextureTasks!: TextureAssetTask[];
 
     constructor(assetsManager: AssetsManager, assetBaseUrl: string) {
-        // Asset tasks have been moved into their own class, this makes the code easier to read and
-        // means the texture tasks are prepared and added to the asset manager.
-        // Texture tasks are used by the loader to preload assets before returning a game ready action
-        // this means we don't have performance issues from loading assets mid-game.
-
-        // Mesh task loads in the mesh and mesh textures from the MACHINE_BODY.glb file
-        assetsManager.addMeshTask("pm task", "", assetBaseUrl, Models.king);
-        assetsManager.addMeshTask("pm task", "", assetBaseUrl, Models.marbleRun);
+        // Mesh task loads in the mesh and mesh textures from the glb file
+        assetsManager.addMeshTask("king task", "", assetBaseUrl, Models.king);
+        // assetsManager.addMeshTask("marble task", "", assetBaseUrl, Models.marbleRun);
+        assetsManager.addMeshTask("box task", "", assetBaseUrl, Models.lootBox);
     }
 }
