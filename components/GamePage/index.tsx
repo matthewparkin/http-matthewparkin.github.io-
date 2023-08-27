@@ -47,11 +47,7 @@ class GamePage extends React.Component<IProps, IState> {
 
     // render() - renders html components
     public render() {
-        return (
-            <div className={styles.gameContainer}>
-                <canvas className={styles.renderCanvas} ref={this.canvasRef} />
-            </div>
-        );
+        return <canvas className={styles.renderCanvas} ref={this.canvasRef} />;
     }
 }
 
