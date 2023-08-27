@@ -31,7 +31,7 @@ export default class Game {
             canvas,
             true,
             { preserveDrawingBuffer: true, stencil: true },
-            true
+            true,
         ); // Generate the BabylonJS 3D engine
 
         /* By default the resolution of the canvas is scaled up by 0.5, this is not needed for this
@@ -120,7 +120,7 @@ export default class Game {
         const sphere = MeshBuilder.CreateSphere(
             "sphere",
             { diameter: 2, segments: 32 },
-            this.scene
+            this.scene,
         );
         // Move the sphere upward 1/2 its height
         sphere.position.y = 1;
