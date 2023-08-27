@@ -1,4 +1,17 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
+commits_behind=$(eval "git rev-list --left-right --count origin/master...HEAD" | cut -f1)
+
+if [ $commits_behind \> 0 ]; then
+    echo $'\e[1;31m'Branch is behind master by $commits_behind commits$'\e[0m'
+    exit 1
+else
+    echo $'\e[1;32m'Branch is up to date with master$'\e[0m'
+fi
+
+echo $'\e[1;35m'Checking Linting...$'\e[0m'
+yarn lint
+
+echo $'\e[1;35m'Checking Prettier...$'\e[0m'
+yarn prettier
