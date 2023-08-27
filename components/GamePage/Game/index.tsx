@@ -3,19 +3,19 @@ import {
     Color3,
     Color4,
     Engine,
+    HardwareScalingOptimization,
     HemisphericLight,
     MeshBuilder,
     Scene,
     SceneLoader,
+    SceneOptimizer,
+    SceneOptimizerOptions,
+    ScenePerformancePriority,
     Vector3,
 } from "babylonjs";
 import AssetTasksManager from "./AssetTasksManager";
-import king from "./king";
 import Camera from "./Camera";
-import PlayerChar from "./PlayerChar";
-// This loads the GLTF loader that is required to load the prize machine model
 import "babylonjs-loaders";
-import { Mesh } from "babylonjs/Meshes/mesh";
 
 // Class for game logic
 export default class Game {
@@ -25,7 +25,9 @@ export default class Game {
     private assetBaseUrl: string;
     private assetTasks!: AssetTasksManager;
 
-    constructor(canvas: HTMLCanvasElement, assetBaseUrl: string) {
+    private hardwareScalingOptimisation: HardwareScalingOptimization;
+
+    constructor(canvas: HTMLCanvasElement, assetBaseUrl: string, config: {}) {
         // Initialise the canvas and engine
         this.engine = new Engine(
             canvas,
@@ -38,28 +40,30 @@ export default class Game {
         project as performance can take a massive hit without much benefit to the visual quality */
         this.engine.setHardwareScalingLevel(1);
 
-        // Initialise states
-        this.assetBaseUrl = assetBaseUrl;
+        this.hardwareScalingOptimisation = new HardwareScalingOptimization(0, 1.5, 0.25);
 
         // Removes default BabylonJS loading screen
-        SceneLoader.ShowLoadingScreen = true;
+        SceneLoader.ShowLoadingScreen = false;
+
+        // Initialise states
+        this.assetBaseUrl = assetBaseUrl;
 
         // Initialising the Scene
         this.scene = new Scene(this.engine);
 
-        // TODO: Remove the debug layer code
+        // TODO: Remove the debug layer code before going to production
         this.scene.debugLayer.show();
 
         this.scene.createDefaultEnvironment({
             createGround: true,
             createSkybox: true,
             toneMappingEnabled: true,
-            skyboxColor: Color3.FromHexString("#590000"),
-            skyboxSize: 2000,
-            groundColor: Color3.FromHexString("#590000"),
-            groundSize: 200,
-            enableGroundMirror: true,
-            // ground
+            skyboxColor: Color3.FromHexString("#ececec"),
+            skyboxSize: 25000, // Size of the skybox to prevent Z-fighting with the ground
+            groundColor: Color3.FromHexString("#FFFFFF"),
+            groundSize: 20000,
+            groundOpacity: 1,
+            enableGroundShadow: true,
         });
 
         this.scene.imageProcessingConfiguration.vignetteEnabled = true;
@@ -67,7 +71,7 @@ export default class Game {
         this.scene.imageProcessingConfiguration.vignetteWeight = 2.5;
 
         this.scene.ambientColor = Color3.FromHexString("#000000");
-        this.scene.clearColor = Color4.FromHexString("#890000ff");
+        this.scene.clearColor = Color4.FromHexString("#ececec");
 
         this.scene.imageProcessingConfiguration.contrast = 1.3;
         this.scene.imageProcessingConfiguration.exposure = 1.6;
@@ -84,7 +88,6 @@ export default class Game {
 
         const light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
 
-        // Default intensity is 1. Let's dim the light a small amount
         light.intensity = 0.7;
 
         // Add camera to the scene
@@ -101,21 +104,28 @@ export default class Game {
         const assetsManager = new AssetsManager(this.scene);
         this.assetTasks = new AssetTasksManager(assetsManager, this.assetBaseUrl);
 
-        // We have our own loading screen so this is not needed - on by default
         assetsManager.useDefaultLoadingScreen = false;
         assetsManager.load();
 
         assetsManager.onFinish = () => {
             // Builds the machine body asset and changes materials, also adds glow layer to scene
-            const theKing = new king();
-            theKing.build(this.scene);
-
-            this.handleGameLoadComplete();
         };
+
+        this.handleGameLoadComplete();
     }
 
     // Handles running the scene optimiser, registers running the render loop, and dispatches game complete action
     private handleGameLoadComplete() {
+        // Optimiser options - Tries to reach a target framerate of 60fps with a check every 500ms
+        const options = new SceneOptimizerOptions(60, 500);
+        /* Hardware scaling gracefully degrades the visual quality if the device does not have
+        sufficient hardware resource. This runs two passes and sets the scale to a max limit of 1.5 */
+        options.addOptimization(this.hardwareScalingOptimisation);
+
+        const optimiser = new SceneOptimizer(this.scene, options);
+        // This runs here to ensure the scene achieves a higher frame rate at the cost of degraded visual quality
+        optimiser.start();
+
         // Our built-in 'sphere' shape.
         const sphere = MeshBuilder.CreateSphere(
             "sphere",
@@ -128,12 +138,14 @@ export default class Game {
 
         sphere.checkCollisions = true;
 
-        const playerChar = new PlayerChar(this.scene);
-        // playerChar.position.x =  new Vector3(0, 1, 0);
-
         // Registers a render loop to repeatedly render the scene
         this.engine.runRenderLoop(() => this.scene.render());
 
+        // The first frame of the animation can take a while to load in, as this is preloading and
+        // allocating resources, this can take a while and may cause the game-ready and on-ready
+        // events to be called prior to the scene being ready. This.scene.render() is called on the
+        // first frame of the render, allowing the subsequent functions to only be performed after
+        // this inital render has taken place.
         this.scene.render();
     }
 }
