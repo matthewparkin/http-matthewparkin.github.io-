@@ -1,12 +1,16 @@
+export interface IRecommendedGame {
+    textureUrl: string;
+    gameUrl: string;
+}
+
 export interface IGameLaunchConfig {
-    isMega: false;
-    hasWon: false;
-    hasSpun: false;
-    isSpinning: false;
-    canSpin: false;
-    infoUrl: "";
-    latestGameName: "";
-    latestGameUrl: "";
-    debug: false;
-    showToolTip: true;
+    hasWon: boolean;
+    isMega: boolean;
+    infoUrl: string;
+    latestGameName: string;
+    latestGameUrl: string;
+    firstSpin?: boolean;
+    debug: boolean;
+    showToolTip: boolean;
+    recommendedGames: IRecommendedGame[];
 }
