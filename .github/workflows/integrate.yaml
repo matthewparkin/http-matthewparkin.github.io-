@@ -23,8 +23,6 @@ jobs:
               run: yarn
             - name: Build project
               run: yarn build
-            - name: Export project
-              run: yarn export
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@v4.3.0
               with:
