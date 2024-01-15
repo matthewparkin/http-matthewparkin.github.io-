@@ -1,15 +1,15 @@
 import * as React from "react";
 import Game from "./Game";
 import styles from "./index.module.css";
+import { IGameLaunchConfig } from "./Game/constants/GameConfig";
 
 export interface IProps {
-    // assetBaseUrl - is a relative base url for where the assets are hosted eg."public/", might use this more as develop
+    // assetBaseUrl - is a relative base url for where the assets are hosted eg."public/" this will be used to load the assets and mean I dont have to hard code the url
     assetBaseUrl: string;
 }
 
 // Config options to launch the game config
-type IState = {
-    isMega: boolean;
+type IState = IGameLaunchConfig & {
     hasWon: boolean;
     hasSpun: boolean;
     isSpinning: boolean;
@@ -37,6 +37,7 @@ class GamePage extends React.Component<IProps, IState> {
         latestGameUrl: "",
         debug: false,
         showToolTip: true,
+        recommendedGames: [],
     };
 
     public constructor(props: IProps) {
@@ -57,8 +58,8 @@ class GamePage extends React.Component<IProps, IState> {
         }
     }
 
-    // createGame - Creates new PrizeMachine3DGame
-    private createGame(canvasElement: HTMLCanvasElement, options: {}) {
+    // createGame - Creates new instance of the game
+    private createGame(canvasElement: HTMLCanvasElement, options: IGameLaunchConfig) {
         this.game = new Game(canvasElement, this.props.assetBaseUrl, options);
 
         return this.game;
